@@ -1,0 +1,40 @@
+
+//http://code.google.com/chrome/extensions/manifest.html
+
+{
+  // Required
+  "name": "MODium",
+  "version": "0.1",
+
+  // Recommended
+  "description": "A newtab replacement for Markit On Demand.",
+
+  "browser_action": {
+    //"default_icon": "images/icon19.png", // optional
+    "default_title": "MODium"      // optional; shown in tooltip
+  },
+
+/*
+  "icons": {
+    "128": "./img/icon128.png",
+    "16": "./img/icon16.png",
+    "48": "./img/icon48.png"
+  },*/
+
+  "chrome_url_overrides": {
+    "newtab":"index.html"
+  },
+
+   "permissions": [
+    "bookmarks",
+    "history",
+    "chrome://favicon/",
+    "tabs",
+    "management"
+  ],
+
+  //"options_page": "options.html",
+  "homepage_url": "http://dev.markitondemand.com"
+
+
+}
