@@ -3,87 +3,91 @@
 <head>
   <title>MODium</title>
 	<link rel="stylesheet" href="content/styles/bootstrap.min.css" />
-  <link rel="stylesheet" href="content/styles/bootstrap-responsive.css" /><!--this file has local edits-->
+  <link rel="stylesheet" href="content/styles/xbootstrap-responsive.css" /><!--this file has local edits-->
+  <link rel="stylesheet" href="content/styles/jQueryUI/jquery.ui.all.css" />
 	<link rel="stylesheet" href="content/styles/modium.css" />
 </head>
 <body>
 
-
-
-<header>
-  <div class="container-fluid">
-    <div class="row-fluid">
-      <div class="span12 headerInner">
-        <div class="pull-left">MODium</div>
-        <div class="pull-right">Markit On Demand</div>
-      </div>
-    </div>
-  </div>
-
-</header>
-
-<div class="navbar">
-    <div class="navbar-inner">
-      <div class="container">
-          <div class="pull-right">
-            <a class="brand">&nbsp;</a>
-            <ul class="nav">
-              
-              <li class="edit"><a href="#editnavbarModal" data-toggle="modal"><i class="icon-pencil"></i> Edit</a></li>
-            </ul>
-            <form class="navbar-search ">
-              <input type="text" class="search-query" placeholder="Search">
-            </form>
-          </div>
-      </div>
-    </div>
-  </div>
-
-
-
-<div class="container-fluid">
-  <div id="weather"></div>
-</div>
-
-<footer>
-  <div class="water"></div>
-  <div class="container"> 
-    <div class="row">
-      <div class="span12">
-        <div class="pull-left">
-          <p>Copyright &copy; 2012 Markit Group Limited. ALL DATA PROVIDED AS IS, WITH NO WARRANTIES. All rights reserved.</p>
-          <ul class="unstyled row-fluid">
-            <li><a target="_blank" href="http://www.markit.com/en/about/legal/privacy-policy.page">Privacy Policy</a></li>
-            <li><a class="termsButton" target="_blank" href="http://www.markit.com/en/about/legal/terms-of-use.page">Terms of Use</a><li>
-            <li><a target="_blank" href="http://www.markit.com/en/about/legal/disclaimer.page">Disclaimer</a></li><li><a target="_blank" href="http://www.markit.com/en/about/contact/contact-us.page">Contact us</a></li>
-          </ul>
+  <header>
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span12 headerInner">
+          <div class="pull-left">MODium</div>
+          <div class="pull-right">Markit On Demand</div>
         </div>
-        <div class="pull-right logo"></div>
       </div>
     </div>
-  </div>
-</footer>
-	
 
-<div id="editnavbarModal" class="modal hide fade">
-  <div class="modal-header">
-    <a class="close" data-dismiss="modal">&times;</a>
-    <h3>Edit MODium Navbar Links</h3>
+  </header>
+
+  <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+            <div class="pull-right">
+              <a class="brand">&nbsp;</a>
+              <ul class="nav">
+                <li class="edit"><a href="#editnavbarModal" data-toggle="modal"><i class="icon-pencil"></i> Edit</a></li>
+              </ul>
+              <form class="navbar-search">
+                <input type="text" class="search-query" placeholder="Search">
+              </form>
+            </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  <div class="container-fluid">
+    <div id="weather"></div>
   </div>
-  <div class="modal-body">
-    <p>One fine body....</p>
-    <h4>Items</h4>
-    <ul>
-    </ul>
+
+  <footer>
+    <div class="water"></div>
+    <div class="container"> 
+      <div class="row">
+        <div class="span12">
+          <div class="pull-left">
+            <p>Copyright &copy; 2012 Markit Group Limited. ALL DATA PROVIDED AS IS, WITH NO WARRANTIES. All rights reserved.</p>
+            <ul class="unstyled row-fluid">
+              <li><a target="_blank" href="http://www.markit.com/en/about/legal/privacy-policy.page">Privacy Policy</a></li>
+              <li><a class="termsButton" target="_blank" href="http://www.markit.com/en/about/legal/terms-of-use.page">Terms of Use</a><li>
+              <li><a target="_blank" href="http://www.markit.com/en/about/legal/disclaimer.page">Disclaimer</a></li><li><a target="_blank" href="http://www.markit.com/en/about/contact/contact-us.page">Contact us</a></li>
+            </ul>
+          </div>
+          <div class="pull-right logo"></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  	
+
+  <div id="editnavbarModal" class="modal hide fade">
+    <div class="modal-header">
+      <a class="close" data-dismiss="modal">&times;</a>
+      <h3>Edit MODium Navbar Links</h3>
+    </div>
+    <div class="modal-body">
+      <h4>Sort NavBar Items</h4>
+      <ul class="navbaritems unstyled"></ul>
+
+      <h4>Add New Item <label class="pull-right"><a href="#" data-navbar="reset">Reset defaults</a></label></h4>
+      <form class="well form-inline" action="#">
+        <input type="text" name="name" class="input-medium" placeholder="Link Name">
+        <input type="text" name="url" class="input-medium" placeholder="http://">
+        <button type="submit" class="btn">Add</button>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="btn" data-dismiss="modal">Close</a>
+      <a href="#" class="btn btn-primary">Save changes</a>
+    </div>
   </div>
-  <div class="modal-footer">
-    <a href="#" class="btn" data-dismiss="modal">Close</a>
-    <a href="#" class="btn btn-primary">Save changes</a>
-  </div>
-</div>
 
 
 	<script type="text/javascript" src="content/scripts/jquery.1.7.1.js"></script>
+  <script type="text/javascript" src="content/scripts/jquery-ui-1.8.18.custom.min.js"></script>
 	<script type="text/javascript" src="content/scripts/bootstrap.min.js"></script>
 	<script type="text/javascript" src="content/scripts/modium.js"></script>
 </body>

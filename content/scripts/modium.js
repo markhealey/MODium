@@ -9,6 +9,8 @@ modiumjs = function(){
 
 	this.isConnected = navigator.onLine;
 
+
+
 };
 
 modiumjs.prototype.init = function(){
@@ -17,7 +19,7 @@ modiumjs.prototype.init = function(){
 	this.bookmarksBar = this.getBookmarksBar();
 
 	//NAV
-	this.storeNavBarItems();
+	this.storeNavBarItems(this.getNavBarItems());
 	this.buildNavBarItems();
 
 	//EVENTS
@@ -25,26 +27,76 @@ modiumjs.prototype.init = function(){
 		placement:"bottom",
 		title:"Edit Navbar",
 		content:"The links in the Navbar are customizable! Drag and drop to reorder them, or swap them out for different links altogether."
+	}).click(function(e){
+		$(this).popover('hide');
 	});
 
 	//MODAL
 	$("#editnavbarModal .modal-footer .btn-primary").click(function(e){
 		self.collectAndSaveNavBarItemsFromEditModal();
-		//$('#editnavbarModal').modal('hide');
+	});
+
+	$("#editnavbarModal form").submit(function(e){
+		e.preventDefault();
+		self.addNavBarItemForm(this);
+	});
+
+	$('a[data-navbar="reset"]').click(function(e){
+		e.preventDefault();
+		if(confirm("Are you sure? Resetting the Nav Bar will delete any custom items you've added.")){
+			self.storeNavBarItems(self.NAVBAR_DEFAULTS);
+			self._navBarModalShown($('#editnavbarModal'));
+			self.redrawMainNav();
+		}
 	});
 
 	$('#editnavbarModal').on('shown', function () {
 		var $m = $(this);
-		$m.find(".modal-body ul").empty();
-		$.each(self.getNavBarItems(),function(i,el){
-			var $li = $("<li><a href='"+el.url+"'>"+el.label+"</a></li>")
-			$m.find(".modal-body ul").append($li)
-		});
+		self._navBarModalShown($m);
 	});
 
 	//this.youOnline();
 	//this.getWeather();
 	//this.renderBookmarksBarList();
+};
+
+modiumjs.prototype._navBarModalShown = function($m){
+	var self=this;
+	$m.find(".modal-body ul").empty();
+	$.each(self.getNavBarItems(),function(i,el){
+		var $li = $("<li class='ui-state-default'><i class='icon-align-justify'></i> <a href='"+el.url+"'>"+el.label+"</a></li>")
+		$m.find(".modal-body ul").append($li)
+	});
+	this.setupNavBarSort();
+};
+
+modiumjs.prototype.setupNavBarSort = function(){
+	$( ".modal-body ul" ).sortable({
+		placeholder: "ui-state-highlight",
+		forcePlaceholderSize: true,
+		sort: function(e, ui){
+			$(ui.helper).addClass('moving')
+		},
+		beforeStop:function(e, ui){
+			$(ui.helper).removeClass('moving')
+		},
+	}).disableSelection();
+};
+
+modiumjs.prototype.addNavBarItemForm = function(form) {
+	var $form = $(form);
+	var label = $form.find('input[name="name"]').val();
+	var url = $form.find('input[name="url"]').val();
+	var $li = $("<li class='ui-state-default'><i class='icon-align-justify'></i> <a href='"+url+"'>"+label+"</a></li>");
+
+	//add LI
+	$form.parents().children().find(".modal-body ul").append($li);
+
+	//refresh sortable
+	$( ".modal-body ul" ).sortable("refresh");
+
+	//reset form
+	$form.find('input').val("").end().find("input:eq(0)").focus();	
 };
 
 modiumjs.prototype.buildNavBarItems = function(){
@@ -64,13 +116,20 @@ modiumjs.prototype.buildNavBarItems = function(){
 modiumjs.prototype.collectAndSaveNavBarItemsFromEditModal = function(){
 	var list = [];
 	$('#editnavbarModal').find("ul li a").each(function(i,el){
-		log(el)
+		//log(el)
 		list.push({
 			url:$(el).attr("href"),
 			label:$(el).text()
 		});
 	});
 	this.storeNavBarItems(list);
+	this.redrawMainNav();
+	$('#editnavbarModal').modal("hide");
+};
+
+modiumjs.prototype.redrawMainNav = function(){
+	$(".navbar li:not('li.edit')").remove();
+	this.buildNavBarItems();
 };
 
 modiumjs.prototype.NAVBAR_DEFAULTS = [
@@ -82,11 +141,13 @@ modiumjs.prototype.NAVBAR_DEFAULTS = [
 ];
 
 modiumjs.prototype.storeNavBarItems = function(items){
-	localStorage.setItem('NavBarItems', JSON.stringify(items || this.NAVBAR_DEFAULTS));
+	var list = items;
+	localStorage.setItem('NavBarItems', JSON.stringify(list));
+	log(list,this.getNavBarItems())
 };
 
 modiumjs.prototype.getNavBarItems = function(){
-	return JSON.parse(localStorage.getItem("NavBarItems"));
+	return JSON.parse(localStorage.getItem("NavBarItems")) || this.NAVBAR_DEFAULTS;
 };
 
 modiumjs.prototype.editNavBar = function(){
@@ -204,5 +265,9 @@ MODium = new modiumjs();
 
 if (typeof chrome != "undefined"){
 	MODium.init();
+	//$('#editnavbarModal').modal('show')
 }
+
+
+
 

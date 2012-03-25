@@ -9,10 +9,10 @@
   // Recommended
   "description": "A newtab replacement for Markit On Demand.",
 
-  "browser_action": {
+  //"browser_action": {
     //"default_icon": "images/icon19.png", // optional
-    "default_title": "MODium"      // optional; shown in tooltip
-  },
+    //"default_title": "MODium"      // optional; shown in tooltip
+  //},
 
 /*
   "icons": {

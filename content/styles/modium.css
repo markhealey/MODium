@@ -37,28 +37,6 @@ header .pull-right {
 	text-indent:-9999px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* nav */
 .navbar-inner { 
 	border-radius:0; 
@@ -103,9 +81,41 @@ header .pull-right {
 
 .navbar-search .search-query {
 	border:1px solid #fff;
-
 	color: #1F4367 !important;
 }
+
+.modal .navbaritems, .form-inline {
+	margin-top:9px;
+}
+
+.modal .navbaritems li {
+	display:block;
+	padding:5px;
+	cursor:pointer;
+	background:#fff;
+	margin:2px;
+}
+
+.modal .navbaritems i { opacity: 0.5; }
+
+.modal .navbaritems li.moving {
+	background:#1F4367;
+	color:#fff;
+}
+
+.modal .navbaritems li.moving a {
+	color:#fff;
+}
+
+.modal .navbaritems li.moving i{
+	background-image:url("../Images/glyphicons-halflings-white.png");
+}
+
+.modal .navbaritems li.ui-state-highlight {
+	border-color:#1F4367;
+	background-color:#eaeaea;
+}
+
 
 footer {
 	position: fixed;
