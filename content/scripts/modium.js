@@ -1,15 +1,11 @@
 
 function log(){
 	console.log(arguments);
-}
-
-
+};
 
 modiumjs = function(){
 
 	this.isConnected = navigator.onLine;
-
-
 
 };
 
@@ -22,9 +18,14 @@ modiumjs.prototype.init = function(){
 	this.storeNavBarItems(this.getNavBarItems());
 	this.buildNavBarItems();
 
+	//DATA
+	this.checkLanConnection();
+	//this.renderBookmarksBarList();
+	//this.getTicketsIOwn();
+
 	//EVENTS
 	$(".navbar .edit").popover({
-		placement:"bottom",
+		placement:"left",
 		title:"Edit Navbar",
 		content:"The links in the Navbar are customizable! Drag and drop to reorder them, or swap them out for different links altogether."
 	}).click(function(e){
@@ -56,8 +57,7 @@ modiumjs.prototype.init = function(){
 	});
 
 	//this.youOnline();
-	//this.getWeather();
-	//this.renderBookmarksBarList();
+	
 };
 
 modiumjs.prototype._navBarModalShown = function($m){
@@ -143,7 +143,7 @@ modiumjs.prototype.NAVBAR_DEFAULTS = [
 modiumjs.prototype.storeNavBarItems = function(items){
 	var list = items;
 	localStorage.setItem('NavBarItems', JSON.stringify(list));
-	log(list,this.getNavBarItems())
+	//log(list,this.getNavBarItems())
 };
 
 modiumjs.prototype.getNavBarItems = function(){
@@ -245,28 +245,79 @@ modiumjs.prototype.renderBookmarksBarList = function(bookmarks){
 
 };
 
-modiumjs.prototype.getWeather = function(){
-
-	if (!this.isConnected){ return; }
-
+modiumjs.prototype.checkLanConnection = function(){
+	var self = this;
 	$.ajax({
-		url: "http://api.wunderground.com/api/8e2ddaaa7ed03304/conditions/q/CO/Boulder.json",
+		url: "https://dev2.dev.local/wiki_api/todays_launches.asp",
 		dataType: "jsonp",
-		success: function(json) {
-			var current = json.current_observation;
-			log(json.current_observation)
-			$("#weather").append(current.weather + ", " + current.temperature_string +"<img src='http://icons.wxug.com/i/c/g/" + current.icon + ".gif'>")
-		}
+		timeout:1000,
+		cache:true,
+		context:this
+	}).done(function(jqxhr) {
+			log("LAN connection test successful; ", jqxhr);
+			log("Today's launches: ",jqxhr.results[0].rows);
+			this.drawLaunches(jqxhr);
+	}).fail(function(jqxhr,txt){
+		log(txt,arguments)
+		jqxhr.abort();
+		log("Abort attempted")
+		$("#contentBody").prepend(
+			self.drawAlert(
+				self._ALERT_TYPES.error,
+				"Network Error!",
+				"It appears you are not connected to the MOD corporate network (or Dev2 is down).")
+		);
 	});
+}
 
+modiumjs.prototype.drawLaunches = function(json){
+	var $ol = $("<ul />");
+	try{
+		var rows = json.results[0]["rows"];
+		for (var i=0;i<rows.length;i++){
+			var el = rows[i];
+			var $li = $("<li />").append('<a target="_blank" href="https://sbm.wsod.local/tmtrack/tmtrack.dll?IssuePage&RecordId='+el.id+'&Template=view&TableId=1029">'+el.TITLE+'</a> &mdash; '+el.CLIENT_REL+' <span style="color:#666">('+el.CONTACT_USER+')</span>');	
+			$ol.append($li);
+		}
+		if (rows.length < 1){
+			$ol.append('<li>There are no scheduled launches today. <a target="_blank" href="//sbm.wsod.local/tmtrack/tmtrack.dll?ReportPage&Template=reports%2Flistframe&ReportId=6880">View all upcoming launches in SBM</a>.</li>');	
+		}
+	}catch(e){
+		$ol.append("<li>No data available ("+e+")</li>");	
+	}
+	$("#launches").append($ol);
+};
+
+modiumjs.prototype.getTicketsIOwn = function(){
+	$.ajax({
+		url:"https://sbm.wsod.local/tmtrack/tmtrack.dll?sid=pxxqmrvv&ReportPage&Template=reports%2Fjsonscript.htm&ReportId=32000&ReportType=1&QueryType=1&TableId=1015&ProjectId=487",
+		dataType:"json"
+	}).done(function(jqxhr){
+		log(jqxhr)
+	});
+};
+
+modiumjs.prototype._ALERT_TYPES = {success:"success",error:"error",info:"info"};
+
+modiumjs.prototype.drawAlert = function(type,label,text){
+	type = type || this._ALERT_TYPES.info; //see http://twitter.github.com/bootstrap/components.html#alerts
+	label = label || "Warning";
+	text = text || "Something happened that shouldn't have. Try again."
+	return ['<div class="alert alert-block"><a class="close" data-dismiss="alert">&times;</a><b class="alert-heading">',label,'</b> ',text,'</div>'].join("");
 };
 
 MODium = new modiumjs();
 
-if (typeof chrome != "undefined"){
-	MODium.init();
-	//$('#editnavbarModal').modal('show')
+
+if (typeof chrome == "undefined"){
+	window.chrome = {
+		bookmarks:{
+			getTree:function(){ $.noop(); }
+		}
+	}
 }
+
+MODium.init();
 
 
 

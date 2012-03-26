@@ -79,10 +79,6 @@ header .pull-right {
 	background-image:url("../Images/glyphicons-halflings-white.png");
 }
 
-.navbar-search .search-query {
-	border:1px solid #fff;
-	color: #1F4367 !important;
-}
 
 .modal .navbaritems, .form-inline {
 	margin-top:9px;
@@ -116,6 +112,15 @@ header .pull-right {
 	background-color:#eaeaea;
 }
 
+#contentBody {
+	position: relative;
+}
+
+#contentBody #weather {
+	text-align:right;
+}
+
+iframe { font-family:arial;}
 
 footer {
 	position: fixed;

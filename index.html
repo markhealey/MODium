@@ -24,14 +24,14 @@
   <div class="navbar">
       <div class="navbar-inner">
         <div class="container">
+            <div class="pull-left">
+              <div class="nav" id="weather"></div>
+            </div>
             <div class="pull-right">
               <a class="brand">&nbsp;</a>
               <ul class="nav">
                 <li class="edit"><a href="#editnavbarModal" data-toggle="modal"><i class="icon-pencil"></i> Edit</a></li>
               </ul>
-              <form class="navbar-search">
-                <input type="text" class="search-query" placeholder="Search">
-              </form>
             </div>
         </div>
       </div>
@@ -39,8 +39,23 @@
 
 
 
-  <div class="container-fluid">
-    <div id="weather"></div>
+  <div id="contentBody" class="container">
+    
+    <div class="row">
+      <div class="span4" id="launches">
+        <h3>Today&rsquo;s Launches</h3>
+      </div>
+      <div class="span4">
+        <h3>Tickets I Own</h3>
+
+      </div>
+      <div class="span4">
+        <h3>Search</h3>
+        <form class="form-inline">
+          <input type="text" class="search-query" placeholder="Find stuff">
+        </form>
+      </div>
+    </div>
   </div>
 
   <footer>
