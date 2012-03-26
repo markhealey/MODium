@@ -20,7 +20,7 @@ modiumjs.prototype.init = function(){
 
 	//DATA
 	this.checkLanConnection();
-	//this.renderBookmarksBarList();
+	this.renderBookmarksBarList();
 	//this.getTicketsIOwn();
 
 	//EVENTS
@@ -271,12 +271,12 @@ modiumjs.prototype.checkLanConnection = function(){
 }
 
 modiumjs.prototype.drawLaunches = function(json){
-	var $ol = $("<ul />");
+	var $ol = $("<ul class='' />");
 	try{
 		var rows = json.results[0]["rows"];
 		for (var i=0;i<rows.length;i++){
 			var el = rows[i];
-			var $li = $("<li />").append('<a target="_blank" href="https://sbm.wsod.local/tmtrack/tmtrack.dll?IssuePage&RecordId='+el.id+'&Template=view&TableId=1029">'+el.TITLE+'</a> &mdash; '+el.CLIENT_REL+' <span style="color:#666">('+el.CONTACT_USER+')</span>');	
+			var $li = $("<li />").append('<a target="_blank" href="https://sbm.wsod.local/tmtrack/tmtrack.dll?IssuePage&RecordId='+el.id+'&Template=view&TableId=1029">'+el.TITLE+'</a><br><small>'+el.CLIENT_REL+' <span style="color:#666">('+el.CONTACT_USER+')</span></small>');	
 			$ol.append($li);
 		}
 		if (rows.length < 1){

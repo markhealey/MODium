@@ -21,6 +21,8 @@ html { -webkit-font-smoothing: antialiased; }
 	background-image:url("../Images/glyphicons-halflings-white.png");	
 }
 
+small { font-size:85%;}
+
 header {
 	background:transparent url("../images/markit_wave_bg.png") top left no-repeat;
 	height:82px;
