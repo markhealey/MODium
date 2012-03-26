@@ -1,1 +1,1 @@
-readme
+A Chrome newtab replacement extension. Work in progress for sure.
