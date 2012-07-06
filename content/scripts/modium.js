@@ -188,6 +188,7 @@ modiumjs.prototype.getBookmarks = function(){
 }
 
 modiumjs.prototype.getBookmarksBar = function(){
+	if (!chrome || !chrome.bookmarks) { return; }
 	var self = this;
 	chrome.bookmarks.getTree(function(nodes){
 		self.renderBookmarksBarList(nodes[0].children[0]); //bookmarks bar object
