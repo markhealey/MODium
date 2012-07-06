@@ -81,6 +81,32 @@ header .pull-right {
 	background-image:url("../Images/glyphicons-halflings-white.png");
 }
 
+#bookmarks {
+	height:500px;
+	overflow:auto;
+	background:#fff;
+}
+
+#bookmarks li.nav-header {
+	display: block;
+	padding: 3px 0;
+	font-size: 11px;
+	font-weight: bold;
+	line-height: 18px;
+	color: #999;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	text-transform: uppercase;
+	cursor:pointer;
+}
+
+#bookmarks li.nav-header:hover {
+	font-size:12px;
+}
+
+#bookmarks li a {
+	display: block;
+	padding:4px 0;
+}
 
 .modal .navbaritems, .form-inline {
 	margin-top:9px;
@@ -89,16 +115,22 @@ header .pull-right {
 .modal .navbaritems li {
 	display:block;
 	padding:5px;
-	cursor:pointer;
+	cursor:move;
 	background:#fff;
 	margin:2px;
+	border-radius:2px;
 }
 
+.modal .navbaritems a:first-child { cursor: move;}
+.modal .navbaritems a.del { font-size:20px; color:red; font-weight:bold; }
 .modal .navbaritems i { opacity: 0.5; }
 
 .modal .navbaritems li.moving {
 	background:#1F4367;
 	color:#fff;
+	border-radius:2px;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	font-weight:bold;
 }
 
 .modal .navbaritems li.moving a {
@@ -125,6 +157,7 @@ header .pull-right {
 iframe { font-family:arial;}
 
 footer {
+	z-index: -1;
 	position: fixed;
 	left: 0px;
 	right:0px;

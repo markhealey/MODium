@@ -21,11 +21,11 @@ modiumjs.prototype.init = function(){
 	//DATA
 	this.checkLanConnection();
 	this.renderBookmarksBarList();
-	//this.getTicketsIOwn();
+	this.getTicketsIOwn();
 
 	//EVENTS
 	$(".navbar .edit").popover({
-		placement:"left",
+		placement:"bottom",
 		title:"Edit Navbar",
 		content:"The links in the Navbar are customizable! Drag and drop to reorder them, or swap them out for different links altogether."
 	}).click(function(e){
@@ -64,7 +64,7 @@ modiumjs.prototype._navBarModalShown = function($m){
 	var self=this;
 	$m.find(".modal-body ul").empty();
 	$.each(self.getNavBarItems(),function(i,el){
-		var $li = $("<li class='ui-state-default'><i class='icon-align-justify'></i> <a href='"+el.url+"'>"+el.label+"</a></li>")
+		var $li = $("<li class='ui-state-default'><i class='icon-align-justify'></i> <a href='"+el.url+"'>"+el.label+"</a> <a href='javascript:void(0);' title='Remove from NavBar' class='pull-right del'>&times;</a></li>")
 		$m.find(".modal-body ul").append($li)
 	});
 	this.setupNavBarSort();
@@ -81,13 +81,18 @@ modiumjs.prototype.setupNavBarSort = function(){
 			$(ui.helper).removeClass('moving')
 		},
 	}).disableSelection();
+
+	$(".modal-body a.del").click(function(){
+		$(this).parent().remove();
+		$( ".modal-body ul" ).sortable("refresh");
+	});
 };
 
 modiumjs.prototype.addNavBarItemForm = function(form) {
 	var $form = $(form);
 	var label = $form.find('input[name="name"]').val();
 	var url = $form.find('input[name="url"]').val();
-	var $li = $("<li class='ui-state-default'><i class='icon-align-justify'></i> <a href='"+url+"'>"+label+"</a></li>");
+	var $li = $("<li class='ui-state-default'><i class='icon-align-justify'></i> <a href='"+url+"'>"+label+"</a><a href='javascript:void(0);' title='Remove from NavBar' class='pull-right del'>&times;</a></li>");
 
 	//add LI
 	$form.parents().children().find(".modal-body ul").append($li);
@@ -96,7 +101,7 @@ modiumjs.prototype.addNavBarItemForm = function(form) {
 	$( ".modal-body ul" ).sortable("refresh");
 
 	//reset form
-	$form.find('input').val("").end().find("input:eq(0)").focus();	
+	$form.find('input').val("").end().find("input:first").focus();	
 };
 
 modiumjs.prototype.buildNavBarItems = function(){
@@ -115,8 +120,8 @@ modiumjs.prototype.buildNavBarItems = function(){
 
 modiumjs.prototype.collectAndSaveNavBarItemsFromEditModal = function(){
 	var list = [];
-	$('#editnavbarModal').find("ul li a").each(function(i,el){
-		//log(el)
+	$('#editnavbarModal').find("ul li a:not(a.del)").each(function(i,el){
+		log(el)
 		list.push({
 			url:$(el).attr("href"),
 			label:$(el).text()
@@ -161,16 +166,19 @@ modiumjs.prototype.youOnline = function(){
 
 modiumjs.prototype.navbarTabs = function($el){
 	if ($el.parent().hasClass("edit")) return;
+	/*
 	$el.click(function(e){
 		e.preventDefault();
 		chrome.tabs.create({
 			"url": $el.attr("href")
 		});
 	});
+*/
 }
 
 modiumjs.prototype.getBookmarks = function(){
 	chrome.bookmarks.getTree(function(nodes){
+		nodes = nodes || [];
 		for (var i=0; i<nodes.length; i++){
 			//log(nodes[i])
 		}
@@ -187,7 +195,7 @@ modiumjs.prototype.getBookmarksBar = function(){
 }
 
 modiumjs.prototype.renderBookmarksBarList = function(bookmarks){
-
+	bookmarks = bookmarks || [];
 	var $bookmarksContainer = $("#bookmarks");
 
 	$.each(bookmarks, function(i,el){
@@ -248,7 +256,7 @@ modiumjs.prototype.renderBookmarksBarList = function(bookmarks){
 modiumjs.prototype.checkLanConnection = function(){
 	var self = this;
 	$.ajax({
-		url: "https://dev2.dev.local/wiki_api/todays_launches.asp",
+		url: "http://dev3.dev.local/internal/SBMProxy/Call/ReportJsonpApi?reportId=12381",
 		dataType: "jsonp",
 		timeout:1000,
 		cache:true,
@@ -256,6 +264,7 @@ modiumjs.prototype.checkLanConnection = function(){
 	}).done(function(jqxhr) {
 			log("LAN connection test successful; ", jqxhr);
 			log("Today's launches: ",jqxhr.results[0].rows);
+			log(jqxhr)
 			this.drawLaunches(jqxhr);
 	}).fail(function(jqxhr,txt){
 		log(txt,arguments)
@@ -265,13 +274,13 @@ modiumjs.prototype.checkLanConnection = function(){
 			self.drawAlert(
 				self._ALERT_TYPES.error,
 				"Network Error!",
-				"It appears you are not connected to the MOD corporate network (or Dev2 is down).")
+				"It appears you are not connected to the MOD corporate network (or Dev3 is down).")
 		);
 	});
 }
 
 modiumjs.prototype.drawLaunches = function(json){
-	var $ol = $("<ul class='' />");
+	var $ol = $("<ul class='unstyled' />");
 	try{
 		var rows = json.results[0]["rows"];
 		for (var i=0;i<rows.length;i++){
@@ -280,7 +289,7 @@ modiumjs.prototype.drawLaunches = function(json){
 			$ol.append($li);
 		}
 		if (rows.length < 1){
-			$ol.append('<li>There are no scheduled launches today. <a target="_blank" href="//sbm.wsod.local/tmtrack/tmtrack.dll?ReportPage&Template=reports%2Flistframe&ReportId=6880">View all upcoming launches in SBM</a>.</li>');	
+			$ol.append('<li>There are no scheduled launches today. <a target="_blank" href="https://sbm.wsod.local/tmtrack/tmtrack.dll?ReportPage&Template=reports%2Flistframe&ReportId=6880">View all upcoming launches in SBM</a>.</li>');	
 		}
 	}catch(e){
 		$ol.append("<li>No data available ("+e+")</li>");	
@@ -290,8 +299,8 @@ modiumjs.prototype.drawLaunches = function(json){
 
 modiumjs.prototype.getTicketsIOwn = function(){
 	$.ajax({
-		url:"https://sbm.wsod.local/tmtrack/tmtrack.dll?sid=pxxqmrvv&ReportPage&Template=reports%2Fjsonscript.htm&ReportId=32000&ReportType=1&QueryType=1&TableId=1015&ProjectId=487",
-		dataType:"json"
+		url:"http://dev3.dev.local/internal/SBMProxy/Call/ReportJsonpApi?reportId=32000&qsParams=solutionid%3D6%26RptKey%3D1336146065%26Recno%3D0",
+		dataType:"jsonp"
 	}).done(function(jqxhr){
 		log(jqxhr)
 	});
@@ -318,7 +327,3 @@ if (typeof chrome == "undefined"){
 }
 
 MODium.init();
-
-
-
-
